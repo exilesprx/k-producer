@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Events\Domain\UserCreated;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\Repositories\UserRepository;
+use App\Services\EventBusService;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -23,6 +24,10 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    private $service;
+
+    private $repository;
+
     /**
      * Where to redirect users after registration.
      *
@@ -33,11 +38,16 @@ class RegisterController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param EventBusService $service
+     * @param UserRepository $repository
      */
-    public function __construct()
+    public function __construct(EventBusService $service, UserRepository $repository)
     {
         $this->middleware('guest');
+
+        $this->service = $service;
+
+        $this->repository = $repository;
     }
 
     /**
@@ -58,15 +68,21 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return \App\User
+     * @param  array $data
+     * @return \App\Entities\User
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $user = $this->repository->createNewUser(
+            $data['name'],
+            $data['email'],
+            $data['password']
+        );
+
+        $event = UserCreated::from($user);
+
+        $this->service->dispatchEvent($event);
+
+        return $user;
     }
 }
