@@ -2,21 +2,34 @@
 
 namespace App\Entities;
 
+use Carbon\Carbon;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
 use Ramsey\Uuid\UuidInterface;
 
-class User extends Entity
+class User extends Entity implements AuthenticatableContract, MustVerifyEmailContract
 {
+    use Authorizable, Authenticatable, MustVerifyEmail, Notifiable;
+
     private $name;
 
     private $email;
 
-    public function __construct(UuidInterface $uuid, string $name, string $email)
+    private $emailVerifiedAt;
+
+    public function __construct(UuidInterface $uuid, string $name, string $email, ?Carbon $emailVerifiedAt = null)
     {
         $this->id = $uuid;
 
         $this->name = $name;
 
         $this->email = $email;
+
+        $this->emailVerifiedAt = $emailVerifiedAt;
     }
 
     public function getId(): UuidInterface
@@ -47,4 +60,19 @@ class User extends Entity
             'email' => $this->email
         ];
     }
+
+    public function getKeyName(): string
+    {
+        return 'id';
+    }
+
+    public function getKey(): string
+    {
+        return $this->id;
+    }
+
+    public function hasVerifiedEmail()
+{
+    return ! is_null($this->emailVerifiedAt);
+}
 }

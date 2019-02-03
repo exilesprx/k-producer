@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Events\External\ExternalContract;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher;
 
 class ExternalEventService
 {

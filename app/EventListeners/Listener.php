@@ -15,19 +15,17 @@ abstract class Listener
     public function subscribe(Dispatcher $events)
     {
         foreach(static::$events as $event) {
-            $className = explode('\\', $event);
-
-            $className = last($className);
-
-            $this->listenOn($events, $className);
+            $this->listenOn($events, $event);
         }
     }
 
-    protected function listenOn(Dispatcher $events, string $className) : void
+    protected function listenOn(Dispatcher $events, string $event) : void
     {
         $contextClass = static::class;
 
-        $listenMethod = static::$postfix . $className;
+        $className = explode('\\', $event);
+
+        $listenMethod = static::$postfix . last($className);
 
         $contextListener = implode(
             "",
@@ -43,7 +41,7 @@ abstract class Listener
         }
 
         $events->listen(
-            $className,
+            $event,
             $contextListener
         );
     }
