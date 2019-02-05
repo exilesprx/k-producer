@@ -2,24 +2,24 @@
 
 namespace App\Repositories;
 
-use App\Entities\User as UserEntity;
+use App\Entities\UnverifiedUser;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 
 class UserRepository
 {
-    public function createNewUser(string $name, string $email, string $password): UserEntity
+    public function createNewUser(string $name, string $email, string $password): UnverifiedUser
     {
         $uuid = Uuid::uuid4();
 
-        User::create([
+        $user = User::create([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
             'uuid' => $uuid
         ]);
 
-        return new UserEntity($uuid, $name, $email);
+        return new UnverifiedUser($user->id, $uuid, $name, $email);
     }
 }
