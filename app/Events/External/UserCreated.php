@@ -25,6 +25,9 @@ class UserCreated implements KafkaContract
 
     public function toArray(): array
     {
-        return $this->user->toArray();
+        return [
+            'name' => $this->user->getName(),
+            'email' => $this->user->getEmail()
+        ];
     }
 }

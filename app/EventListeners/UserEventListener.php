@@ -8,11 +8,11 @@ use App\Services\ExternalEventService;
 
 class UserEventListener extends Listener implements DomainEventListenerContract
 {
+    private $service;
+
     protected static $events = [
         UserCreated::class
     ];
-
-    private $service;
 
     public function __construct(ExternalEventService $service)
     {

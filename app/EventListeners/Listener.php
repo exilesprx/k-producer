@@ -19,7 +19,7 @@ abstract class Listener
         }
     }
 
-    protected function listenOn(Dispatcher $events, string $event) : void
+    protected function listenOn(Dispatcher $events, string $event): void
     {
         $contextClass = static::class;
 
