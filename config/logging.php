@@ -88,6 +88,11 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+        'logzio' => [
+            'driver' => 'monolog',
+            'handler' => \App\Logging\LogzioHandler::class,
+            'formatter' => \Monolog\Formatter\JsonFormatter::class
+        ]
     ],
 
 ];
