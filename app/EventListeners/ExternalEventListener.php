@@ -2,7 +2,7 @@
 
 namespace App\EventListeners;
 
-use App\Events\External\ExternalContract;
+use App\Events\External\KafkaContract;
 use Interop\Queue\ConnectionFactory;
 use Interop\Queue\Context;
 use Interop\Queue\Message;
@@ -19,7 +19,7 @@ abstract class ExternalEventListener extends Listener implements ExternalEventLi
         $this->factory = $factory;
     }
 
-    protected function sendMessage(ExternalContract $event): void
+    protected function sendMessage(KafkaContract $event): void
     {
         $context = $this->createContext();
 
@@ -35,12 +35,12 @@ abstract class ExternalEventListener extends Listener implements ExternalEventLi
         return $this->factory->createContext();
     }
 
-    private function createMessage(Context $context, ExternalContract $event): Message
+    private function createMessage(Context $context, KafkaContract $event): Message
     {
         $data = $event->toArray();
 
         array_add($data, 'uuid', Uuid::uuid4());
 
-        return $context->createMessage(get_class($event), $data);
+        return $context->createMessage($event->getName(), $data);
     }
 }

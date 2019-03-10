@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\EventListeners\ExternalUserEventListener;
+use App\EventListeners\LogEventListener;
 use App\EventListeners\UserEventListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -28,7 +29,8 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $subscribe = [
         UserEventListener::class,
-        ExternalUserEventListener::class
+        ExternalUserEventListener::class,
+        LogEventListener::class
     ];
 
     /**

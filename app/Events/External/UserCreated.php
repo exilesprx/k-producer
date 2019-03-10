@@ -3,8 +3,9 @@
 namespace App\Events\External;
 
 use App\Entities\UnverifiedUser;
+use App\Events\LogableEvent;
 
-class UserCreated implements KafkaContract
+class UserCreated implements KafkaContract, LogableEvent
 {
     private $user;
 
@@ -29,5 +30,22 @@ class UserCreated implements KafkaContract
             'name' => $this->user->getName(),
             'email' => $this->user->getEmail()
         ];
+    }
+
+    public function getName(): string
+    {
+        $path = explode('\\', self::class);
+
+        return array_pop($path);
+    }
+
+    public function toJson($options = 0) : string
+    {
+        return json_encode(
+            [
+                'event' => $this->getName(),
+                'data' => $this->toArray()
+            ]
+        );
     }
 }
