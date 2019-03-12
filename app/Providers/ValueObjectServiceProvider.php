@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\ValueObjects\UserCreatedQueue;
+use App\ValueObjects\ApplicationQueue;
 use Illuminate\Support\ServiceProvider;
 
 class ValueObjectServiceProvider extends ServiceProvider
@@ -10,9 +10,11 @@ class ValueObjectServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            UserCreatedQueue::class,
+            ApplicationQueue::class,
             function() {
-                return new UserCreatedQueue('user.created');
+                $name = env("KAFKA_QUEUE");
+
+                return new ApplicationQueue($name);
             }
         );
     }

@@ -3,7 +3,7 @@
 namespace App\EventListeners;
 
 use App\Events\External\UserCreated;
-use App\ValueObjects\UserCreatedQueue;
+use App\ValueObjects\ApplicationQueue;
 use Interop\Queue\ConnectionFactory;
 
 class ExternalUserEventListener extends ExternalEventListener
@@ -12,7 +12,7 @@ class ExternalUserEventListener extends ExternalEventListener
         UserCreated::class
     ];
 
-    public function __construct(ConnectionFactory $factory, UserCreatedQueue $queue)
+    public function __construct(ConnectionFactory $factory, ApplicationQueue $queue)
     {
         parent::__construct($factory);
 

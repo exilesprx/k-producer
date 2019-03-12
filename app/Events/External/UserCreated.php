@@ -45,7 +45,8 @@ class UserCreated implements KafkaContract, LogableEvent
             [
                 'event' => $this->getName(),
                 'data' => $this->toArray()
-            ]
+            ],
+            $options
         );
     }
 }

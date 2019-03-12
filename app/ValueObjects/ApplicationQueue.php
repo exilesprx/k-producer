@@ -2,7 +2,7 @@
 
 namespace App\ValueObjects;
 
-class UserCreatedQueue
+class ApplicationQueue
 {
     private $name;
 

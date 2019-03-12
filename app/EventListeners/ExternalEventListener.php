@@ -41,6 +41,11 @@ abstract class ExternalEventListener extends Listener implements ExternalEventLi
 
         array_add($data, 'uuid', Uuid::uuid4());
 
-        return $context->createMessage($event->getName(), $data);
+        return $context->createMessage(
+            json_encode($data),
+            [
+                'event' => $event->getName()
+            ]
+        );
     }
 }
